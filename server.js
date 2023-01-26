@@ -6,6 +6,13 @@
 const express = require('express')
 //time to create a server
 const app = express()
+//activate json parser
+app.use(express.json())
+
+//morgan middleware
+const morgan = require('morgan')
+
+app.use(morgan('tiny'))
 
 //Data to use
 let persons = [
@@ -62,6 +69,11 @@ app.get('/api/info', (request, response) => {
     
     
 })
+//3.3: Phonebook backend step3
+// Implement the functionality for displaying the information for a single phonebook entry. 
+//The url for getting the data for a person with the id 5 should be http://localhost:3001/api/persons/5
+// If an entry for the given id is not found, the server has to respond with the appropriate status code.
+
 
 app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
@@ -73,7 +85,48 @@ app.get('/api/persons/:id', (request, response) => {
     }
 })
 
+// 3.4: Phonebook backend step4
+// Implement functionality that makes it possible to delete a single phonebook
+//entry by making an HTTP DELETE request to the unique URL of that phonebook entry.
 
+// Test that your functionality works with either Postman or the Visual Studio Code REST client.
+//wont' delete, but I get the 204 code.
+app.delete('/api/persons/:id', (request, response) => {
+  const id = Number(request.params.id)
+  person = persons.filter(person => person.id !== id)
+   
+    response.status(204).end()
+
+})
+
+//3.5: Phonebook backend step5
+// Expand the backend so that new phonebook entries can be added by 
+//making HTTP POST requests to the address http://localhost:3001/api/persons.
+
+// Generate a new id for the phonebook entry with the 
+//Math.random function. Use a big enough range for your random values so that the likelihood of creating duplicate ids is small.
+
+app.post('/api/persons', (request, response) => {
+  // const maxId = persons.length > 0
+  // ? Math.max(...persons.map(n => n.id))
+  // : 0
+  
+  if(!body.name || !body.number || body.name === persons.name){
+    return response.status(400).json({
+      error: 'content missing or name is not unique'
+    })
+  }
+
+  
+  const person = {
+    name: body.name,
+    id: Math.floor(Math.random()),
+    number: body.number,
+  }
+
+  persons = persons.concat(person)
+  response.json(person)
+})
 
 //define the port
 const PORT = 8000
