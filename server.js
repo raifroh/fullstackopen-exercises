@@ -12,8 +12,14 @@ app.use(express.json())
 //morgan middleware
 const morgan = require('morgan')
 
-app.use(morgan('tiny'))
+//gets time it took to log request
+app.use(morgan('tiny', function(req,res) {
+  console.log(req.hostname)
+}))
 
+morgan.token('param', function(req,res,param){
+  console.log(req.params[param])
+})
 //Data to use
 let persons = [
     { 
